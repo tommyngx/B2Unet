@@ -32,7 +32,7 @@ class Config:
         self.TEST_CSV_PATH = f"{self.DATA_DIR}/dataset.csv"
 
         # Model Saving
-        self.MODEL_SAVE_PATH = f"/content/{self.PROJECT_NAME}_model.pth"
+        self.MODEL_SAVE_PATH = f"/content/{self.PROJECT_NAME}"
 
         # Metrics
         self.METRICS_TRAIN = self.get_metrics()
