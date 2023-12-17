@@ -80,14 +80,21 @@ def main():
     )
 
     # Training loop
+    max_score = 0
     for epoch in range(1, model_config.EPOCHS + 1):
         print(f"\nEpoch: {epoch}/{model_config.EPOCHS}")
         train_logs = train_epoch.run(train_loader)
         valid_logs = valid_epoch.run(valid_loader)
 
         # Do something (save model, change lr, etc.)
-        if epoch % 10 == 0:
-            torch.save(model.state_dict(), f"{model_config.MODEL_SAVE_PATH}_{epoch}.pth")
+        if max_score < valid_logs['iou_score']:
+        max_score = valid_logs['iou_score']
+        torch.save(model.state_dict(), f"{model_config.MODEL_SAVE_PATH}_{epoch}.pth")
+        print('Model saved!')
+
+        if i == 20:
+        optimizer.param_groups[0]['lr'] = 1e-5
+        print('Decrease decoder learning rate to 1e-5!')
 
 if __name__ == "__main__":
     main()
