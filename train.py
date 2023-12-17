@@ -7,6 +7,7 @@ from utils import get_training_augmentation,get_validation_augmentation, get_pre
 from models.unetplusplus import UnetPlusPlus
 from models.unet import Unet
 import segmentation_models_pytorch as smp
+from loss import DiceLoss
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train segmentation model.")
@@ -54,7 +55,7 @@ def main():
 
     # Define optimizer and loss function
     optimizer = torch.optim.Adam(model.parameters(), lr=model_config.LEARNING_RATE)
-    loss_fn = model_config.get_loss()
+    loss_fn = DiceLoss()
 
     # Create data loaders
     train_loader = DataLoader(train_dataset, batch_size=model_config.BATCH_SIZE, shuffle=True, num_workers=2)

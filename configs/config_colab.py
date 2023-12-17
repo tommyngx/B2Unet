@@ -57,9 +57,7 @@ class Config:
                 activation=self.ACTIVATION
             )
         # Add more conditions for other models as needed
-    def get_loss(self):
-        return smp.utils.losses.DiceLoss()
-    
+
     def get_metrics(self):
         if self.MODEL_NAME == "unetplusplus":
             return [
