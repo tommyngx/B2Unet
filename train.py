@@ -6,6 +6,7 @@ from dataset import Dataset
 from utils import get_training_augmentation, get_preprocessing, visualize
 from models.unetplusplus import UnetPlusPlus
 from models.unet import Unet
+import segmentation_models_pytorch as smp
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train segmentation model.")
@@ -18,7 +19,11 @@ def main():
     args = parse_args()
     # Dynamically import the specified configuration module
     config_module = importlib.import_module(f'configs.{args.config}')
-    model_config = config_module.Config()
+    model_config  = config_module.Config()
+
+    ENCODER = model_config.ENCODER
+    ENCODER_WEIGHTS=model_config.ENCODER_WEIGHTS
+    preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
 
     # Load train and validation datasets
     train_dataset = Dataset(
@@ -28,7 +33,7 @@ def main():
         split="train",
         classes=model_config.CLASSES,
         augmentation=get_training_augmentation(),
-        preprocessing=get_preprocessing(model_config.get_preprocessing())
+        preprocessing=get_preprocessing(preprocessing_fn),
     )
 
     valid_dataset = Dataset(
@@ -38,13 +43,14 @@ def main():
         split="test",
         classes=model_config.CLASSES,
         augmentation=get_validation_augmentation(),
-        preprocessing=get_preprocessing(model_config.get_preprocessing())
+        preprocessing=get_preprocessing(preprocessing_fn),
     )
 
     # Load model
     model_config.MODEL_NAME = args.model
     model = model_config.get_model()
     model.to(model_config.DEVICE)
+
 
     # Define optimizer and loss function
     optimizer = torch.optim.Adam(model.parameters(), lr=model_config.LEARNING_RATE)

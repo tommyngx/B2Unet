@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import albumentations as albu
 from albumentations.pytorch import ToTensorV2
+import segmentation_models_pytorch as smp
 
 def get_training_augmentation():
     train_transform = [
@@ -44,6 +45,9 @@ def get_preprocessing(preprocessing_fn):
     ]
     return albu.Compose(_transform)
 
+def preprocessing_fn(ENCODER, ENCODER_WEIGHTS):
+    preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
+    return preprocessing_fn
 
 def visualize(**images):
     """Plot images in one row."""
