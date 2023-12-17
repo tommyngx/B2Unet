@@ -2,6 +2,7 @@
 from models.unet import Unet
 from models.unetplusplus import UnetPlusPlus
 import segmentation_models_pytorch as smp
+from segmentation_models_pytorch import utils
 
 class Config:
     def __init__(self, model_name="unetplusplus"):
