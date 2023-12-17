@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from dataset import Dataset
 from utils import get_training_augmentation, get_preprocessing, visualize
 from models import Unet, UnetPlusPlus  # Update with your actual module and class names
-from configs import Config
+from configs.config import Config
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train a segmentation model.")
