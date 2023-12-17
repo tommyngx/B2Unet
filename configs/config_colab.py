@@ -19,8 +19,8 @@ class Config:
         self.ACTIVATION = "sigmoid"
 
         # Training
-        self.EPOCHS = 50
-        self.BATCH_SIZE = 4
+        self.EPOCHS = 5
+        self.BATCH_SIZE = 1
         self.LEARNING_RATE = 0.0001
 
         # Data
