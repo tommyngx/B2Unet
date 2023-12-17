@@ -9,7 +9,7 @@ class Config:
         self.MODEL_NAME = "unetplusplus"
 
         # General
-        self.PROJECT_NAME = "BreastCancerSegmentation"
+        self.PROJECT_NAME = "B2Unet"
         self.DEVICE = "cuda"  # or "cpu" if you want to run on CPU
 
         # Model
