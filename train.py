@@ -6,7 +6,6 @@ from dataset import Dataset
 from utils import get_training_augmentation, get_preprocessing, visualize
 from models.unetplusplus import UnetPlusPlus
 from models.unet import Unet
-from configs import Config
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train segmentation model.")
