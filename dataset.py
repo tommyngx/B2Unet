@@ -3,7 +3,7 @@ import pandas as pd
 import cv2
 import numpy as np
 from torch.utils.data import Dataset as BaseDataset
-from configs import Config  # Import a generic Config class
+from configs.config import Config  # Import a generic Config class
 
 class Dataset(BaseDataset):
     def __init__(self, config, split, classes=None, augmentation=None, preprocessing=None):

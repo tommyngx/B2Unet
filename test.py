@@ -4,7 +4,7 @@ from dataset import Dataset
 from models import UnetPlusPlus  # Update with your actual module and class names
 from utils import get_validation_augmentation, get_preprocessing  # Update with your actual module names
 from loss import DiceLoss  # Update with your actual loss class from loss.py
-from configs import Config
+from configs.config import Config
 
 def main():
     # Load configurations
