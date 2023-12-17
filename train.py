@@ -47,7 +47,6 @@ def main():
     )
 
     # Load model
-    model_config.MODEL_NAME = args.model
     model = model_config.get_model()
     model.to(model_config.DEVICE)
 
