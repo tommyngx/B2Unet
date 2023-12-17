@@ -3,7 +3,7 @@ import importlib
 import torch
 from torch.utils.data import DataLoader
 from dataset import Dataset
-from utils import get_training_augmentation, get_preprocessing, visualize
+from utils import get_training_augmentation,get_validation_augmentation, get_preprocessing, visualize
 from models.unetplusplus import UnetPlusPlus
 from models.unet import Unet
 import segmentation_models_pytorch as smp
