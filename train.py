@@ -1,21 +1,23 @@
 import argparse
+import importlib
 import torch
 from torch.utils.data import DataLoader
 from dataset import Dataset
 from utils import get_training_augmentation, get_preprocessing, visualize
-from models import Unet, UnetPlusPlus  # Update with your actual module and class names
-from configs.config import Config
+from models import Unet, UnetPlusPlus
+from configs import Config
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Train a segmentation model.")
-    parser.add_argument("--config", type=str, default="config_unetplusplus.py", help="Path to the configuration file")
+    parser = argparse.ArgumentParser(description="Train segmentation model.")
+    parser.add_argument("--config", type=str, default="config_unetplusplus", help="Name of the configuration file without extension")
     parser.add_argument("--model", type=str, default="unetplusplus", help="Name of the model to use")
     return parser.parse_args()
 
 def main():
     # Load configurations
     args = parse_args()
-    config_module = __import__(args.config.replace(".py", ""))
+    # Dynamically import the specified configuration module
+    config_module = importlib.import_module(args.config)
     model_config = config_module.Config()
 
     # Load train and validation datasets
