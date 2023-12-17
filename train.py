@@ -92,7 +92,7 @@ def main():
             torch.save(model.state_dict(), f"{model_config.MODEL_SAVE_PATH}_{epoch}.pth")
             print('Model saved!')
 
-        if i == 20:
+        if epoch == 20:
             optimizer.param_groups[0]['lr'] = 1e-5
             print('Decrease decoder learning rate to 1e-5!')
 
