@@ -6,7 +6,7 @@ from segmentation_models_pytorch import utils
 
 class Config:
     def __init__(self, model_name="unetplusplus"):
-        self.MODEL_NAME = "B2Unet"
+        self.MODEL_NAME = "unetplusplus"
 
         # General
         self.PROJECT_NAME = "BreastCancerSegmentation"
