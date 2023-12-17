@@ -20,7 +20,7 @@ class Config:
 
         # Training
         self.EPOCHS = 3
-        self.BATCH_SIZE = 4
+        self.BATCH_SIZE = 2
         self.LEARNING_RATE = 0.0001
 
         # Data
