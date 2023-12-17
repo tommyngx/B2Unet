@@ -36,8 +36,8 @@ class Config:
 
         # Metrics
         self.METRICS_TRAIN = self.get_metrics()
-        self.METRICS_VALID = self.get_metrics()
-        self.METRICS_TEST = self.get_metrics()
+        self.METRICS_VALID = self.get_val_metrics()
+        self.METRICS_TEST = self.get_val_metrics()
 
     def get_model(self):
         if self.MODEL_NAME == "unetplusplus":
@@ -74,3 +74,19 @@ class Config:
             # Define metrics for the Unet model
             # ...
         # Add more conditions for other models as needed
+
+    def get_val_metrics(self):
+        if self.MODEL_NAME == "unetplusplus":
+            return [
+                smp.utils.metrics.IoU(threshold=0.5),
+                smp.utils.metrics.Fscore(threshold=0.5),
+                smp.utils.metrics.Accuracy(threshold=0.5),
+                # Add more metrics as needed
+            ]
+        elif self.MODEL_NAME == "unet":
+            return [
+                smp.utils.metrics.IoU(threshold=0.5),
+                smp.utils.metrics.Fscore(threshold=0.5),
+                smp.utils.metrics.Accuracy(threshold=0.5),
+                # Add more metrics as needed
+            ]
