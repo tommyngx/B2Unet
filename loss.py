@@ -1,5 +1,6 @@
 
 import segmentation_models_pytorch as smp
+from segmentation_models_pytorch import utils
 
 class DiceLoss(smp.utils.losses.DiceLoss):
     def __init__(self):
