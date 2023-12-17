@@ -6,24 +6,24 @@ from torch.utils.data import Dataset as BaseDataset
 from configs.config import Config  # Import a generic Config class
 
 class Dataset(BaseDataset):
-    def __init__(self, config, split, classes=None, augmentation=None, preprocessing=None):
-        self.config = config  # Use the provided Config instance
+    def __init__(self, config, split):
+        self.config = config
+        self.split = split
+        self.CLASSES = self.config.CLASSES
 
+        self.df = pd.read_csv(self.config.CSV_PATH)
         if split == 'train':
-            df = pd.read_csv(self.config.TRAIN_CSV_PATH)
-        elif split == 'valid':
-            df = pd.read_csv(self.config.VALID_CSV_PATH)
-        else:
-            raise ValueError("Invalid split. Use 'train' or 'valid'.")
+            self.df = self.df[self.df['split'] == 'train']
+        elif split == 'test':
+            self.df = self.df[self.df['split'] == 'test']
 
-        self.ids = list(df['image_name'])
+        self.ids = list(self.df['image_name'])
         self.images_fps = [os.path.join(self.config.IMAGES_DIR, image_id) for image_id in self.ids]
         self.masks_fps = [os.path.join(self.config.MASKS_DIR, image_id) for image_id in self.ids]
 
-        self.class_values = [classes.index(cls.lower()) for cls in classes]
-
-        self.augmentation = augmentation
-        self.preprocessing = preprocessing
+        self.class_values = [self.CLASSES.index(cls.lower()) for cls in self.config.CLASSES]
+        self.augmentation = self.config.get_training_augmentation() if split == 'train' else self.config.get_validation_augmentation()
+        self.preprocessing = self.config.get_preprocessing()
 
     def __getitem__(self, i):
         # read data

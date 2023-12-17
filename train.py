@@ -35,7 +35,7 @@ def main():
         images_dir=model_config.IMAGES_DIR,
         masks_dir=model_config.MASKS_DIR,
         csv_path=model_config.VALID_CSV_PATH,
-        split="valid",
+        split="test",
         classes=model_config.CLASSES,
         augmentation=get_validation_augmentation(),
         preprocessing=get_preprocessing(model_config.get_preprocessing())
