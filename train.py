@@ -4,7 +4,7 @@ import torch
 from torch.utils.data import DataLoader
 from dataset import Dataset
 from utils import get_training_augmentation, get_preprocessing, visualize
-from models import Unet, UnetPlusPlus
+from models import unet, unetplusplus
 from configs import Config
 
 def parse_args():
