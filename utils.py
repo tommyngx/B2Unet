@@ -3,7 +3,7 @@
 # Tommy bugs
 # Miscellaneous utilities.
 #
-
+import os, pytz, time, shutil, requests, glob, re,sys
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
@@ -104,5 +104,11 @@ def inference(model, dataloader, device):
     return predictions
 
 
+def download_file_from_google_drive(file_id, destination):
+    url = f"https://drive.google.com/uc?id={file_id}"
+    response = requests.get(url, stream=True)
 
-
+    with open(destination, "wb") as f:
+        for chunk in response.iter_content(chunk_size=1024):
+            if chunk:
+                f.write(chunk)
