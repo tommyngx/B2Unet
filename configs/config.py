@@ -1,5 +1,8 @@
 import segmentation_models_pytorch as smp
 from models import Unet, UnetPlusPlus  # Update with your actual module and class names
+from models.unet import Unet
+from models.unetplusplus import UnetPlusPlus
+
 
 class Config:
     def __init__(self, model_name="unetplusplus"):
