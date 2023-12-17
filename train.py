@@ -17,7 +17,7 @@ def main():
     # Load configurations
     args = parse_args()
     # Dynamically import the specified configuration module
-    config_module = importlib.import_module(args.config)
+    config_module = importlib.import_module(f'configs.{args.config}')
     model_config = config_module.Config()
 
     # Load train and validation datasets
