@@ -80,7 +80,7 @@ def main(config_file, model_save_link):
         with torch.no_grad():
             pr_mask = best_model(x_tensor)
         pr_mask = (pr_mask.squeeze().cpu().numpy().round())
-        print(image_vis.shape, gt_mask.shape, pr_mask.shape)
+        #print(image_vis.shape, gt_mask.shape, pr_mask.shape)
         visualize(
             image=image_vis,
             ground_truth_mask=gt_mask,
