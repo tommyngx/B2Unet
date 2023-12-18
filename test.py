@@ -82,4 +82,4 @@ if __name__ == "__main__":
     parser.add_argument("--model_path", type=str, required=True, help="Path to the folder where models are saved")
     args = parser.parse_args()
 
-    main(args.config, args.model_save_link)
+    main(args.config, args.model_path)
