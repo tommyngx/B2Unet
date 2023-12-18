@@ -8,8 +8,8 @@ from utils import visualize  # Import your visualization function
 
 def main(config_file, model_save_link):
     # Load config
-    config_module = __import__(config_file)
-    model_config = config_module.Config()
+    config_module = importlib.import_module(f'configs.{args.config}')
+    model_config  = config_module.Config()
 
     # Load model
     best_model = torch.load(f'{model_save_link}')
