@@ -12,7 +12,7 @@ def main(config_file, model_save_link):
     model_config  = config_module.Config()
 
     # Load model
-    best_model = torch.load(f'{model_save_link}')
+    best_model = torch.load(f'{model_path}')
     best_model.to(model_config.DEVICE)
 
     # Load test dataset
@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Test the segmentation model on the test set.")
     parser.add_argument("--config", type=str, required=True, help="Path to the config file")
-    parser.add_argument("--model_save_link", type=str, required=True, help="Path to the folder where models are saved")
+    parser.add_argument("--model_path", type=str, required=True, help="Path to the folder where models are saved")
     args = parser.parse_args()
 
     main(args.config, args.model_save_link)
