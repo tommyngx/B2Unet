@@ -70,7 +70,7 @@ def main(config_file, model_save_link):
     for i in range(5):
         n = np.random.choice(len(test_dataset))
 
-        image_vis = test_dataset[n][0].astype('uint8')
+        image_vis = test_dataset_vis[n][0].astype('uint8')
         image, gt_mask = test_dataset[n]
 
         gt_mask = gt_mask.squeeze()
