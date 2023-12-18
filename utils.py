@@ -65,8 +65,8 @@ def visualize(**images):
 
 def visualize2(**images):
     """Display images."""
-    for name, image_path in images.items():
-        display(Image(filename=image_path, width=300, height=300))
+    for name, image in images.items():
+        display(Image(filename=image, width=300, height=300))
 
 
 def to_tensor(x, **kwargs):
