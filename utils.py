@@ -7,6 +7,7 @@ import os, pytz, time, shutil, requests, glob, re,sys
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.pyplot import imshow
 import albumentations as albu
 from albumentations.pytorch import ToTensorV2
 import segmentation_models_pytorch as smp
