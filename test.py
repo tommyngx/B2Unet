@@ -54,36 +54,8 @@ def main(config_file, model_save_link):
         device=model_config.DEVICE,
     )
 
-    test_dataset_vis = Dataset(
-            images_dir=model_config.IMAGES_DIR,
-            masks_dir=model_config.MASKS_DIR,
-            csv_path=model_config.TEST_CSV_PATH,
-            split="test",
-            classes=model_config.CLASSES,
-            augmentation=get_validation_augmentation(),
-)
-
     # Run evaluation on the test set
     logs = test_epoch.run(test_dataloader)
-
-    # Visualize results
-    for i in range(5):
-        n = np.random.choice(len(test_dataset))
-
-        image_vis = test_dataset[n][0].astype('uint8')
-        image, gt_mask = test_dataset[n]
-
-        gt_mask = gt_mask.squeeze()
-
-        x_tensor = torch.from_numpy(image).to(model_config.DEVICE).unsqueeze(0)
-        pr_mask = best_model.predict(x_tensor)
-        pr_mask = (pr_mask.squeeze().cpu().numpy().round())
-
-        visualize(
-            image=image_vis,
-            ground_truth_mask=gt_mask,
-            predicted_mask=pr_mask
-        )
 
 if __name__ == "__main__":
     import argparse
