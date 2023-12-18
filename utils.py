@@ -11,6 +11,7 @@ from matplotlib.pyplot import imshow
 import albumentations as albu
 from albumentations.pytorch import ToTensorV2
 import segmentation_models_pytorch as smp
+from IPython.display import Image, display
 
 def get_training_augmentation():
     train_transform = [
@@ -61,6 +62,12 @@ def visualize(**images):
         plt.title(' '.join(name.split('_')).title())
         plt.imshow(image)
     plt.show()
+
+def visualize2(**images):
+    """Display images."""
+    for name, image_path in images.items():
+        display(Image(filename=image_path, width=300, height=300))
+
 
 def to_tensor(x, **kwargs):
     return x.transpose(2, 0, 1).astype('float32')

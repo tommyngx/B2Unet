@@ -81,7 +81,7 @@ def main(config_file, model_save_link):
             pr_mask = best_model(x_tensor)
         pr_mask = (pr_mask.squeeze().cpu().numpy().round())
         #print(image_vis.shape, gt_mask.shape, pr_mask.shape)
-        visualize(
+        visualize2(
             image=image_vis,
             ground_truth_mask=gt_mask,
             predicted_mask=pr_mask
