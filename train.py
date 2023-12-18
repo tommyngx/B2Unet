@@ -89,7 +89,7 @@ def main():
         # Do something (save model, change lr, etc.)
         if max_score < valid_logs['iou_score']:
             max_score = valid_logs['iou_score']
-            torch.save(model.state_dict(), f"{model_config.MODEL_SAVE_PATH}_{epoch}.pth")
+            torch.save(model, f"{model_config.MODEL_SAVE_PATH}_{epoch}.pth")
             print('Model saved!')
 
         if epoch == 20:
