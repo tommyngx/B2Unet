@@ -8,6 +8,7 @@ from models.unetplusplus import UnetPlusPlus
 from models.unet import Unet
 import segmentation_models_pytorch as smp
 from loss import DiceLoss
+import datetime
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train segmentation model.")
@@ -80,6 +81,8 @@ def main():
     )
 
     # Training loop
+    now = datetime.datetime.now()
+
     max_score = 0
     for epoch in range(1, model_config.EPOCHS + 1):
         print(f"\nEpoch: {epoch}/{model_config.EPOCHS}")
@@ -89,7 +92,7 @@ def main():
         # Do something (save model, change lr, etc.)
         if max_score < valid_logs['iou_score']:
             max_score = valid_logs['iou_score']
-            torch.save(model, f"{model_config.MODEL_SAVE_PATH}_{epoch}.pth")
+            torch.save(model, f"{model_config.MODEL_SAVE_PATH}_{now.strftime('%Y%m%d')}.pth")
             print('Model saved!')
 
         if epoch == 20:
