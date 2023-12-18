@@ -14,17 +14,6 @@ def main(config_file, model_save_link):
 
     # Load model
     checkpoint = torch.load(f'{args.model_path}', map_location=model_config.DEVICE)
-
-    if 'model_state_dict' in checkpoint:
-        # Model was saved using torch.save(model.state_dict(), ...)
-        model_state_dict_key = 'model_state_dict'
-    elif 'model' in checkpoint:
-        # Model was saved using torch.save(model, ...)
-        model_state_dict_key = 'model'
-    else:
-        raise KeyError("Could not find the model state dictionary in the checkpoint.")
-
-
     best_model = model_config.get_model()
     best_model.load_state_dict(checkpoint['model_state_dict'])
     best_model.to(model_config.DEVICE)
