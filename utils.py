@@ -54,7 +54,7 @@ def preprocessing_fn(ENCODER, ENCODER_WEIGHTS):
 def visualize(**images):
     """Plot images in one row."""
     n = len(images)
-    plt.figure(figsize=(8, 2))
+    plt.figure(figsize=(16, 5))
     for i, (name, image) in enumerate(images.items()):
         plt.subplot(1, n, i + 1)
         plt.xticks([])
