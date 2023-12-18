@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import DataLoader
 import segmentation_models_pytorch as smp
 from dataset import Dataset  # Import your Dataset class
-from loss import DiceLossWrapper  # Import your custom loss or use smp.utils.losses.DiceLoss
+from loss import DiceLoss  # Import your custom loss or use smp.utils.losses.DiceLoss
 from configs import Config  # Import your Config class
 from utils import visualize  # Import your visualization function
 
@@ -38,7 +38,7 @@ def main(config_file, model_save_link):
     # Create test epoch
     test_epoch = smp.utils.train.ValidEpoch(
         model=best_model,
-        loss=DiceLossWrapper(),  # Use your custom loss or smp.utils.losses.DiceLoss
+        loss=DiceLoss(),  # Use your custom loss or smp.utils.losses.DiceLoss
         metrics=metrics_all,
         device=model_config.DEVICE,
     )
