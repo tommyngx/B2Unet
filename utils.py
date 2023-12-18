@@ -66,6 +66,7 @@ def visualize(**images):
 def visualize2(**images):
     """Display images."""
     for name, image in images.items():
+        print(name, image.shape)
         display(Image(filename=image, width=300, height=300))
 
 
