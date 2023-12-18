@@ -13,6 +13,10 @@ def main(config_file, model_save_link):
     config_module = importlib.import_module(f'configs.{args.config}')
     model_config  = config_module.Config()
 
+    ENCODER = model_config.ENCODER
+    ENCODER_WEIGHTS=model_config.ENCODER_WEIGHTS
+    preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
+
     # Load model
     #checkpoint = torch.load(f'{args.model_path}', map_location=model_config.DEVICE)
     #best_model = model_config.get_model()
@@ -28,8 +32,8 @@ def main(config_file, model_save_link):
         csv_path=model_config.TEST_CSV_PATH,
         split="test",
         classes=model_config.CLASSES,
-        augmentation=model_config.get_validation_augmentation(),
-        preprocessing=model_config.get_preprocessing(model_config.get_preprocessing_fn())
+        augmentation=get_validation_augmentation(),
+        preprocessing=get_preprocessing(preprocessing_fn),
     )
 
     test_dataloader = DataLoader(test_dataset)
