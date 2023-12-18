@@ -16,7 +16,8 @@ def main(config_file, model_save_link):
     checkpoint = torch.load(f'{args.model_path}', map_location=model_config.DEVICE)
     #best_model = model_config.get_model()
     #best_model.load_state_dict(checkpoint)
-    best_model = checkpoint['model']
+    #best_model = checkpoint['model']
+    best_model = torch.load(f'{args.model_path}')
     best_model.to(model_config.DEVICE)
 
     # Load test dataset
