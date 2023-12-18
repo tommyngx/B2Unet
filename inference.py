@@ -67,7 +67,7 @@ def main(config_file, model_save_link):
     #logs = test_epoch.run(test_dataloader)
 
     # Visualize results
-    for i in range(5):
+    for i in range(args.number):
         n = np.random.choice(len(test_dataset))
 
         image_vis = test_dataset_vis[n][0].astype('uint8')
@@ -93,6 +93,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Test the segmentation model on the test set.")
     parser.add_argument("--config", type=str, required=True, help="Path to the config file")
     parser.add_argument("--model_path", type=str, required=True, help="Path to the folder where models are saved")
+    parser.add_argument("--number", type=str, required=True, help="number")
     args = parser.parse_args()
 
-    main(args.config, args.model_path)
+    main(args.config, args.model_path, args.number)
