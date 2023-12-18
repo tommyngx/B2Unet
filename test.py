@@ -59,7 +59,7 @@ def main(config_file, model_save_link):
             csv_path=model_config.TEST_CSV_PATH,
             split="test",
             classes=model_config.CLASSES,
-            augmentation=model_config.get_validation_augmentation(),
+            augmentation=get_validation_augmentation(),
 )
 
     # Run evaluation on the test set
