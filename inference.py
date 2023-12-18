@@ -78,7 +78,7 @@ def main(config_file, model_save_link):
         x_tensor = torch.from_numpy(image).to(model_config.DEVICE).unsqueeze(0)
         best_model.eval()
         with torch.no_grad():
-            pr_mask = best_model.predict(x_tensor)
+            pr_mask = best_model(x_tensor)
         pr_mask = (pr_mask.squeeze().cpu().numpy().round())
 
         visualize(
