@@ -1,108 +1,96 @@
-
-# Update 30 Nov 2023
-# Tommy bugs
-# Miscellaneous utilities.
-#
-
 import torch
+from torch.utils.data import DataLoader
+import segmentation_models_pytorch as smp
+from dataset import Dataset  # Import your Dataset class
+from loss import DiceLoss  # Import your custom loss or use smp.utils.losses.DiceLoss
+#from configs import Config  # Import your Config class
+from utils import visualize  # Import your visualization function
+import importlib
+from utils import get_training_augmentation,get_validation_augmentation, get_preprocessing, visualize
 import numpy as np
-import matplotlib.pyplot as plt
-import albumentations as albu
-from albumentations.pytorch import ToTensorV2
 
-def get_training_augmentation():
-    train_transform = [
-        albu.Resize(512, 512),
-        albu.HorizontalFlip(p=0.5),
-        # Add more augmentations as needed
-        albu.OneOf(
-            [
-                albu.CLAHE(p=1),
-                albu.RandomBrightnessContrast(p=1),
-                albu.RandomGamma(p=1),
-            ],
-            p=0.9,
-        ),
-        # Add more augmentations as needed
+def main(config_file, model_save_link):
+    # Load config
+    config_module = importlib.import_module(f'configs.{args.config}')
+    model_config  = config_module.Config()
+
+    ENCODER = model_config.ENCODER
+    ENCODER_WEIGHTS=model_config.ENCODER_WEIGHTS
+    preprocessing_fn = smp.encoders.get_preprocessing_fn(ENCODER, ENCODER_WEIGHTS)
+
+    # Load model
+    #checkpoint = torch.load(f'{args.model_path}', map_location=model_config.DEVICE)
+    #best_model = model_config.get_model()
+    #best_model.load_state_dict(checkpoint)
+    #best_model = checkpoint['model']
+    best_model = torch.load(f'{args.model_path}')
+    best_model.to(model_config.DEVICE)
+
+    # Load test dataset
+    test_dataset = Dataset(
+        images_dir=model_config.IMAGES_DIR,
+        masks_dir=model_config.MASKS_DIR,
+        csv_path=model_config.TEST_CSV_PATH,
+        split="test",
+        classes=model_config.CLASSES,
+        augmentation=get_validation_augmentation(),
+        preprocessing=get_preprocessing(preprocessing_fn),
+    )
+
+    test_dataloader = DataLoader(test_dataset)
+
+    # Define metrics for evaluation
+    metrics_all = [
+        smp.utils.metrics.IoU(threshold=0.5),
+        smp.utils.metrics.Fscore(threshold=0.5),
+        smp.utils.metrics.Accuracy(threshold=0.5),
     ]
-    return albu.Compose(train_transform)
 
-def get_validation_augmentation():
-    test_transform = [
-        albu.Resize(512, 512),
-        albu.PadIfNeeded(512, 512)
-    ]
-    return albu.Compose(test_transform)
+    # Create test epoch
+    test_epoch = smp.utils.train.ValidEpoch(
+        model=best_model,
+        loss=DiceLoss(),  # Use your custom loss or smp.utils.losses.DiceLoss
+        metrics=metrics_all,
+        device=model_config.DEVICE,
+    )
 
-def to_tensor(x, **kwargs):
-    return x.transpose(2, 0, 1).astype('float32')
+    test_dataset_vis = Dataset(
+            images_dir=model_config.IMAGES_DIR,
+            masks_dir=model_config.MASKS_DIR,
+            csv_path=model_config.TEST_CSV_PATH,
+            split="test",
+            classes=model_config.CLASSES,
+            augmentation=get_validation_augmentation(),
+)
 
-def get_preprocessing(preprocessing_fn):
-    _transform = [
-        albu.Lambda(image=preprocessing_fn),
-        albu.Lambda(image=to_tensor, mask=to_tensor),
-    ]
-    return albu.Compose(_transform)
+    # Run evaluation on the test set
+    #logs = test_epoch.run(test_dataloader)
 
+    # Visualize results
+    for i in range(5):
+        n = np.random.choice(len(test_dataset))
 
-def visualize(**images):
-    """Plot images in one row."""
-    n = len(images)
-    plt.figure(figsize=(16, 5))
-    for i, (name, image) in enumerate(images.items()):
-        plt.subplot(1, n, i + 1)
-        plt.xticks([])
-        plt.yticks([])
-        plt.title(' '.join(name.split('_')).title())
-        plt.imshow(image)
-    plt.show()
+        image_vis = test_dataset[n][0].astype('uint8')
+        image, gt_mask = test_dataset[n]
 
-def to_tensor(x, **kwargs):
-    return x.transpose(2, 0, 1).astype('float32')
+        gt_mask = gt_mask.squeeze()
 
-def plot_training_history(train_history, valid_history, metric_name='IoU', plot_title='Training and Validation Metrics'):
-    """Plot the training and validation history."""
-    plt.figure(figsize=(10, 5))
-    plt.plot(train_history, label=f'Training {metric_name}')
-    plt.plot(valid_history, label=f'Validation {metric_name}')
-    plt.xlabel('Epoch')
-    plt.ylabel(metric_name)
-    plt.title(plot_title)
-    plt.legend()
-    plt.show()
+        x_tensor = torch.from_numpy(image).to(model_config.DEVICE).unsqueeze(0)
+        pr_mask = best_model.predict(x_tensor)
+        pr_mask = (pr_mask.squeeze().cpu().numpy().round())
 
-def calculate_iou(pred, target, smooth=1e-5):
-    """Calculate Intersection over Union (IoU)."""
-    intersection = np.logical_and(target, pred)
-    union = np.logical_or(target, pred)
-    iou = (np.sum(intersection) + smooth) / (np.sum(union) + smooth)
-    return iou
+        visualize(
+            image=image_vis,
+            ground_truth_mask=gt_mask,
+            predicted_mask=pr_mask
+        )
 
-def calculate_metrics(predictions, targets, threshold=0.5):
-    """Calculate evaluation metrics (IoU, F1 Score, Accuracy, etc.)."""
-    predictions = (predictions > threshold).astype(np.uint8)
-    targets = targets.astype(np.uint8)
+if __name__ == "__main__":
+    import argparse
 
-    iou = calculate_iou(predictions, targets)
-    f1_score = 2 * np.sum(predictions * targets) / (np.sum(predictions) + np.sum(targets))
-    accuracy = np.sum(predictions == targets) / np.prod(targets.shape)
+    parser = argparse.ArgumentParser(description="Test the segmentation model on the test set.")
+    parser.add_argument("--config", type=str, required=True, help="Path to the config file")
+    parser.add_argument("--model_path", type=str, required=True, help="Path to the folder where models are saved")
+    args = parser.parse_args()
 
-    return iou, f1_score, accuracy
-
-def inference(model, dataloader, device):
-    """Run model inference on a dataloader."""
-    model.eval()
-    predictions = []
-
-    with torch.no_grad():
-        for inputs, _ in dataloader:
-            inputs = inputs.to(device)
-            outputs = model.predict(inputs)
-            predictions.append(outputs.cpu().numpy())
-
-    predictions = np.concatenate(predictions, axis=0)
-    return predictions
-
-
-
-
+    main(args.config, args.model_path)
