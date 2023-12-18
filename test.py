@@ -11,9 +11,9 @@ def main(config_file, model_save_link):
     # Load config
     config_module = importlib.import_module(f'configs.{args.config}')
     model_config  = config_module.Config()
-
+    
     # Load model
-    best_model = torch.load(f'{model_path}')
+    best_model = torch.load(f'{args.model_path}')
     best_model.to(model_config.DEVICE)
 
     # Load test dataset
