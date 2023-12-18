@@ -7,6 +7,7 @@ from loss import DiceLoss  # Import your custom loss or use smp.utils.losses.Dic
 from utils import visualize  # Import your visualization function
 import importlib
 from utils import get_training_augmentation,get_validation_augmentation, get_preprocessing, visualize
+import numpy as np
 
 def main(config_file, model_save_link):
     # Load config
