@@ -9,10 +9,11 @@ import importlib
 from utils import get_training_augmentation,get_validation_augmentation, get_preprocessing, visualize
 import numpy as np
 
-def main(config_file, model_save_link):
+def main(config_file, model_save_link, number):
     # Load config
     config_module = importlib.import_module(f'configs.{args.config}')
     model_config  = config_module.Config()
+    number = args.number
 
     ENCODER = model_config.ENCODER
     ENCODER_WEIGHTS=model_config.ENCODER_WEIGHTS
@@ -67,7 +68,7 @@ def main(config_file, model_save_link):
     #logs = test_epoch.run(test_dataloader)
 
     # Visualize results
-    for i in range(args.number):
+    for i in range(number):
         n = np.random.choice(len(test_dataset))
 
         image_vis = test_dataset_vis[n][0].astype('uint8')
