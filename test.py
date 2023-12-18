@@ -6,6 +6,7 @@ from loss import DiceLoss  # Import your custom loss or use smp.utils.losses.Dic
 #from configs import Config  # Import your Config class
 from utils import visualize  # Import your visualization function
 import importlib
+from utils import get_training_augmentation,get_validation_augmentation, get_preprocessing, visualize
 
 def main(config_file, model_save_link):
     # Load config
@@ -13,7 +14,7 @@ def main(config_file, model_save_link):
     model_config  = config_module.Config()
 
     # Load model
-    checkpoint = torch.load(f'{args.model_path}', map_location=model_config.DEVICE)
+    #checkpoint = torch.load(f'{args.model_path}', map_location=model_config.DEVICE)
     #best_model = model_config.get_model()
     #best_model.load_state_dict(checkpoint)
     #best_model = checkpoint['model']
